@@ -26,12 +26,17 @@ function sv_wordpress_defaults() {
         'default_comment_status' => 'closed',
         'default_ping_status' => 'closed',
         'default_pingback_flag' => 0,
-        'gzipcompression' => 1,
+        'blogdescription' => '',
+        'image_default_link_type' => 'none',
         'permalink_structure' => '/%postname%/',
         'require_name_email' => 1,
+        'rss_use_excerpt' => 1,
         'show_avatars' => 0,
+        'uploads_use_yearmonth_folders' => 1,
         'use_smilies' => 0,
         'use_trackback' => 0,
+        'users_can_register' => 0,
+        'wp_attachment_pages_enabled' => 0,
     ];
 
     foreach($options as $key => $value) {
@@ -47,8 +52,11 @@ function sv_wordpress_defaults() {
         wp_delete_post(1, TRUE);
     }
 
-    wp_delete_comment(1);
-    return;
+    $default_comment = get_comment(1);
+
+    if ($default_comment instanceof WP_Comment) {
+        wp_delete_comment(1, true);
+    }
 }
 
 register_activation_hook(__FILE__, 'sv_wordpress_defaults');
